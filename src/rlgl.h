@@ -323,6 +323,51 @@
 #define RL_BLEND_SRC_ALPHA                      0x80CB      // GL_BLEND_SRC_ALPHA
 #define RL_BLEND_COLOR                          0x8005      // GL_BLEND_COLOR
 
+// GL stencil test (stencil buffer operations)
+#define RL_STENCIL_TEST                         0x0B90      // GL_STENCIL_TEST
+#define RL_STENCIL_CLEAR_VALUE                  0x0B91      // GL_STENCIL_CLEAR_VALUE
+#define RL_STENCIL_FUNC                         0x0B92      // GL_STENCIL_FUNC
+#define RL_STENCIL_VALUE_MASK                   0x0B93      // GL_STENCIL_VALUE_MASK
+#define RL_STENCIL_FAIL                         0x0B94      // GL_STENCIL_FAIL
+#define RL_STENCIL_PASS_DEPTH_FAIL              0x0B95      // GL_STENCIL_PASS_DEPTH_FAIL
+#define RL_STENCIL_PASS_DEPTH_PASS              0x0B96      // GL_STENCIL_PASS_DEPTH_PASS
+#define RL_STENCIL_REF                          0x0B97      // GL_STENCIL_REF
+#define RL_STENCIL_WRITEMASK                    0x0B98      // GL_STENCIL_WRITEMASK
+#define RL_STENCIL_BACK_FUNC                    0x8800      // GL_STENCIL_BACK_FUNC
+#define RL_STENCIL_BACK_FAIL                    0x8801      // GL_STENCIL_BACK_FAIL
+#define RL_STENCIL_BACK_PASS_DEPTH_FAIL         0x8802      // GL_STENCIL_BACK_PASS_DEPTH_FAIL
+#define RL_STENCIL_BACK_PASS_DEPTH_PASS         0x8803      // GL_STENCIL_BACK_PASS_DEPTH_PASS
+#define RL_STENCIL_BACK_REF                     0x8CA3      // GL_STENCIL_BACK_REF
+#define RL_STENCIL_BACK_VALUE_MASK              0x8CA4      // GL_STENCIL_BACK_VALUE_MASK
+#define RL_STENCIL_BACK_WRITEMASK               0x8CA5      // GL_STENCIL_BACK_WRITEMASK
+
+// GL stencil comparison functions (also used for depth test)
+#define RL_NEVER                                0x0200      // GL_NEVER
+#define RL_LESS                                 0x0201      // GL_LESS
+#define RL_EQUAL                                0x0202      // GL_EQUAL
+#define RL_LEQUAL                               0x0203      // GL_LEQUAL
+#define RL_GREATER                              0x0204      // GL_GREATER
+#define RL_NOTEQUAL                             0x0205      // GL_NOTEQUAL
+#define RL_GEQUAL                               0x0206      // GL_GEQUAL
+#define RL_ALWAYS                               0x0207      // GL_ALWAYS
+
+// GL stencil operations
+#define RL_KEEP                                 0x1E00      // GL_KEEP
+#define RL_REPLACE                              0x1E01      // GL_REPLACE
+#define RL_INCR                                 0x1E02      // GL_INCR
+#define RL_DECR                                 0x1E03      // GL_DECR
+#define RL_INVERT                               0x150A      // GL_INVERT
+#define RL_INCR_WRAP                            0x8507      // GL_INCR_WRAP
+#define RL_DECR_WRAP                            0x8508      // GL_DECR_WRAP
+
+// GL face modes (for separate stencil operations)
+#define RL_FRONT                                0x0404      // GL_FRONT
+#define RL_BACK                                 0x0405      // GL_BACK
+#define RL_FRONT_AND_BACK                       0x0408      // GL_FRONT_AND_BACK
+
+// GL buffer bits (for glClear)
+#define RL_STENCIL_BUFFER_BIT                   0x00000400  // GL_STENCIL_BUFFER_BIT
+
 #define RL_READ_FRAMEBUFFER                     0x8CA8      // GL_READ_FRAMEBUFFER
 #define RL_DRAW_FRAMEBUFFER                     0x8CA9      // GL_DRAW_FRAMEBUFFER
 
@@ -685,6 +730,14 @@ RLAPI void rlSetCullFace(int mode);                     // Set face culling mode
 RLAPI void rlEnableScissorTest(void);                   // Enable scissor test
 RLAPI void rlDisableScissorTest(void);                  // Disable scissor test
 RLAPI void rlScissor(int x, int y, int width, int height); // Scissor test
+RLAPI void rlEnableStencilTest(void);                   // Enable stencil test
+RLAPI void rlDisableStencilTest(void);                  // Disable stencil test
+RLAPI void rlStencilFunc(int func, int ref, unsigned int mask); // Set stencil test function (front and back faces)
+RLAPI void rlStencilFuncSeparate(int face, int func, int ref, unsigned int mask); // Set stencil test function (separate faces)
+RLAPI void rlStencilOp(int sfail, int dpfail, int dppass); // Set stencil test operations (front and back faces)
+RLAPI void rlStencilOpSeparate(int face, int sfail, int dpfail, int dppass); // Set stencil test operations (separate faces)
+RLAPI void rlStencilMask(unsigned int mask);            // Set stencil write mask (front and back faces)
+RLAPI void rlStencilMaskSeparate(int face, unsigned int mask); // Set stencil write mask (separate faces)
 RLAPI void rlEnablePointMode(void);                     // Enable point mode
 RLAPI void rlDisablePointMode(void);                    // Disable point mode
 RLAPI void rlSetPointSize(float size);                  // Set the point drawing size
@@ -701,6 +754,8 @@ RLAPI bool rlIsStereoRenderEnabled(void);               // Check if stereo rende
 
 RLAPI void rlClearColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a); // Clear color buffer with color
 RLAPI void rlClearScreenBuffers(void);                  // Clear used screen buffers (color and depth)
+RLAPI void rlSetStencilClearValue(int value);           // Set stencil clear value
+RLAPI void rlClearStencilBuffer(void);                  // Clear stencil buffer
 RLAPI void rlCheckErrors(void);                         // Check and log OpenGL error codes
 RLAPI void rlSetBlendMode(int mode);                    // Set blending mode
 RLAPI void rlSetBlendFactors(int glSrcFactor, int glDstFactor, int glEquation); // Set blending mode factor and equation (using OpenGL factors)
@@ -757,6 +812,7 @@ RLAPI void rlDrawVertexArrayElementsInstanced(int offset, int count, const void 
 // Textures management
 RLAPI unsigned int rlLoadTexture(const void *data, int width, int height, int format, int mipmapCount); // Load texture data
 RLAPI unsigned int rlLoadTextureDepth(int width, int height, bool useRenderBuffer); // Load depth texture/renderbuffer (to be attached to fbo)
+RLAPI unsigned int rlLoadTextureDepthStencil(int width, int height); // Load depth+stencil renderbuffer (packed, to be attached to fbo)
 RLAPI unsigned int rlLoadTextureCubemap(const void *data, int size, int format, int mipmapCount); // Load texture cubemap data
 RLAPI void rlUpdateTexture(unsigned int id, int offsetX, int offsetY, int width, int height, int format, const void *data); // Update texture with new data on GPU
 RLAPI void rlGetGlTextureFormats(int format, unsigned int *glInternalFormat, unsigned int *glFormat, unsigned int *glType); // Get OpenGL internal formats
@@ -1961,6 +2017,48 @@ void rlDisableScissorTest(void) { glDisable(GL_SCISSOR_TEST); }
 // Scissor test
 void rlScissor(int x, int y, int width, int height) { glScissor(x, y, width, height); }
 
+// Enable stencil test
+void rlEnableStencilTest(void) { glEnable(GL_STENCIL_TEST); }
+
+// Disable stencil test
+void rlDisableStencilTest(void) { glDisable(GL_STENCIL_TEST); }
+
+// Set stencil test function (front and back faces)
+void rlStencilFunc(int func, int ref, unsigned int mask) { glStencilFunc(func, ref, mask); }
+
+// Set stencil test function (separate faces)
+// NOTE: Not supported on OpenGL 1.1
+void rlStencilFuncSeparate(int face, int func, int ref, unsigned int mask)
+{
+#if !defined(GRAPHICS_API_OPENGL_11)
+    glStencilFuncSeparate(face, func, ref, mask);
+#endif
+}
+
+// Set stencil test operations (front and back faces)
+void rlStencilOp(int sfail, int dpfail, int dppass) { glStencilOp(sfail, dpfail, dppass); }
+
+// Set stencil test operations (separate faces)
+// NOTE: Not supported on OpenGL 1.1
+void rlStencilOpSeparate(int face, int sfail, int dpfail, int dppass)
+{
+#if !defined(GRAPHICS_API_OPENGL_11)
+    glStencilOpSeparate(face, sfail, dpfail, dppass);
+#endif
+}
+
+// Set stencil write mask (front and back faces)
+void rlStencilMask(unsigned int mask) { glStencilMask(mask); }
+
+// Set stencil write mask (separate faces)
+// NOTE: Not supported on OpenGL 1.1
+void rlStencilMaskSeparate(int face, unsigned int mask)
+{
+#if !defined(GRAPHICS_API_OPENGL_11)
+    glStencilMaskSeparate(face, mask);
+#endif
+}
+
 // Enable wire mode
 void rlEnableWireMode(void)
 {
@@ -2081,6 +2179,12 @@ void rlClearColor(unsigned char r, unsigned char g, unsigned char b, unsigned ch
 
     glClearColor(cr, cg, cb, ca);
 }
+
+// Set stencil clear value
+void rlSetStencilClearValue(int value) { glClearStencil(value); }
+
+// Clear stencil buffer
+void rlClearStencilBuffer(void) { glClear(GL_STENCIL_BUFFER_BIT); }
 
 // Clear used screen buffers (color and depth)
 void rlClearScreenBuffers(void)
@@ -3466,6 +3570,32 @@ unsigned int rlLoadTextureDepth(int width, int height, bool useRenderBuffer)
     glBindRenderbuffer(GL_RENDERBUFFER, id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, width, height);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
+
+    return id;
+}
+
+// Load depth+stencil renderbuffer (packed 24-bit depth + 8-bit stencil)
+// NOTE: The returned renderbuffer must be attached to both the depth and the
+// stencil framebuffer attachments (see rlFramebufferAttach())
+// NOTE: On backends without packed depth+stencil support a plain depth
+// renderbuffer is returned instead (stencil test is not available there)
+unsigned int rlLoadTextureDepthStencil(int width, int height)
+{
+    unsigned int id = 0;
+    if (!isGpuReady) { TRACELOG(RL_LOG_WARNING, "GL: GPU is not ready to load data, trying to load before InitWindow()?"); return id; }
+
+#if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_43) || defined(GRAPHICS_API_OPENGL_ES3)
+    // NOTE: GL_DEPTH24_STENCIL8 provides a combined 24-bit depth + 8-bit stencil buffer (GL_DEPTH_STENCIL)
+    glGenRenderbuffers(1, &id);
+    glBindRenderbuffer(GL_RENDERBUFFER, id);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    TRACELOG(RL_LOG_INFO, "TEXTURE: [ID %i] Depth+stencil renderbuffer loaded successfully", id);
+#else
+    // Fallback: packed depth+stencil not supported by this backend, use depth-only renderbuffer
+    id = rlLoadTextureDepth(width, height, true);
 #endif
 
     return id;

@@ -4407,16 +4407,19 @@ RenderTexture2D LoadRenderTexture(int width, int height)
         target.texture.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
         target.texture.mipmaps = 1;
 
-        // Create depth renderbuffer/texture
-        target.depth.id = rlLoadTextureDepth(width, height, true);
+        // Create depth+stencil renderbuffer/texture
+        target.depth.id = rlLoadTextureDepthStencil(width, height);
         target.depth.width = width;
         target.depth.height = height;
         target.depth.format = 19;       //DEPTH_COMPONENT_24BIT?
         target.depth.mipmaps = 1;
 
-        // Attach color texture and depth renderbuffer/texture to FBO
+        // Attach color texture and depth+stencil renderbuffer/texture to FBO
         rlFramebufferAttach(target.id, target.texture.id, RL_ATTACHMENT_COLOR_CHANNEL0, RL_ATTACHMENT_TEXTURE2D, 0);
         rlFramebufferAttach(target.id, target.depth.id, RL_ATTACHMENT_DEPTH, RL_ATTACHMENT_RENDERBUFFER, 0);
+#if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_43) || defined(GRAPHICS_API_OPENGL_ES3)
+        rlFramebufferAttach(target.id, target.depth.id, RL_ATTACHMENT_STENCIL, RL_ATTACHMENT_RENDERBUFFER, 0);
+#endif
 
         // Check if fbo is complete with attachments (valid)
         if (rlFramebufferComplete(target.id)) TRACELOG(LOG_INFO, "FBO: [ID %i] Framebuffer object created successfully", target.id);
