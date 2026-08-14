@@ -611,8 +611,8 @@ RLAPI void rlTranslatef(float x, float y, float z);     // Multiply the current 
 RLAPI void rlRotatef(float angle, float x, float y, float z); // Multiply the current matrix by a rotation matrix
 RLAPI void rlScalef(float x, float y, float z);         // Multiply the current matrix by a scaling matrix
 RLAPI void rlMultMatrixf(const float *matf);            // Multiply the current matrix by another matrix
-RLAPI void rlFrustum(double left, double right, double bottom, double top, double znear, double zfar);
-RLAPI void rlOrtho(double left, double right, double bottom, double top, double znear, double zfar);
+RLAPI void rlFrustum(double left, double right, double top, double bottom, double znear, double zfar);
+RLAPI void rlOrtho(double left, double right, double top, double bottom, double znear, double zfar);
 RLAPI void rlViewport(int x, int y, int width, int height); // Set the viewport area
 RLAPI void rlSetClipPlanes(double nearPlane, double farPlane);    // Set clip planes distances
 RLAPI double rlGetCullDistanceNear(void);               // Get cull plane distance near
@@ -1173,12 +1173,12 @@ void rlMatrixMode(int mode)
     }
 }
 
-void rlFrustum(double left, double right, double bottom, double top, double znear, double zfar)
+void rlFrustum(double left, double right, double top, double bottom, double znear, double zfar)
 {
     glFrustum(left, right, bottom, top, znear, zfar);
 }
 
-void rlOrtho(double left, double right, double bottom, double top, double znear, double zfar)
+void rlOrtho(double left, double right, double top, double bottom, double znear, double zfar)
 {
     glOrtho(left, right, bottom, top, znear, zfar);
 }
