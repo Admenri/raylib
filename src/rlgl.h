@@ -730,6 +730,7 @@ RLAPI void rlSetCullFace(int mode);                     // Set face culling mode
 RLAPI void rlEnableScissorTest(void);                   // Enable scissor test
 RLAPI void rlDisableScissorTest(void);                  // Disable scissor test
 RLAPI void rlScissor(int x, int y, int width, int height); // Scissor test
+RLAPI void rlGetScissor(int *x, int *y, int *width, int *height); // Get current scissor rectangle
 RLAPI void rlEnableStencilTest(void);                   // Enable stencil test
 RLAPI void rlDisableStencilTest(void);                  // Disable stencil test
 RLAPI void rlStencilFunc(int func, int ref, unsigned int mask); // Set stencil test function (front and back faces)
@@ -2016,6 +2017,18 @@ void rlDisableScissorTest(void) { glDisable(GL_SCISSOR_TEST); }
 
 // Scissor test
 void rlScissor(int x, int y, int width, int height) { glScissor(x, y, width, height); }
+
+// Get current scissor rectangle
+void rlGetScissor(int *x, int *y, int *width, int *height)
+{
+    int box[4] = { 0 };
+    glGetIntegerv(GL_SCISSOR_BOX, box);
+
+    *x = box[0];
+    *y = box[1];
+    *width = box[2];
+    *height = box[3];
+}
 
 // Enable stencil test
 void rlEnableStencilTest(void) { glEnable(GL_STENCIL_TEST); }
